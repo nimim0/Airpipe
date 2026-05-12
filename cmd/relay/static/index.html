@@ -21,7 +21,11 @@
   <div class="strip-cell brand"><a href="/">AIRPIPE</a></div>
   <div class="strip-cell spacer"></div>
   <div class="strip-cell status live"><span class="dot"></span>RELAY ONLINE</div>
-  <a href="https://github.com/Sanyam-G/Airpipe" target="_blank" rel="noopener" class="strip-cell port-btn">GITHUB <span class="arrow">↗</span></a>
+  <a href="https://github.com/Sanyam-G/Airpipe" target="_blank" rel="noopener" class="strip-cell port-btn gh-btn">
+    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span>GITHUB</span>
+    <span class="gh-stars" id="gh-stars">★</span>
+  </a>
 </header>
 
 <main class="hero-clean">
@@ -132,6 +136,19 @@
   </div>
 </section>
 
+<section class="roadmap-clean">
+  <div class="roadmap-text">
+    <h2>What's next</h2>
+    <p>Open feature work. Issues and PRs welcome on GitHub.</p>
+  </div>
+  <ul class="roadmap-list">
+    <li>Persistent pairing for sending multiple files<span class="roadmap-tag">in review</span></li>
+    <li>Receiver-side accept prompt before download</li>
+    <li>LAN device auto-discovery</li>
+    <li>TURN relay for tricky networks</li>
+  </ul>
+</section>
+
 <footer class="bottom-strip">
   <span class="strip-cell">End-to-end encrypted</span>
   <span class="spacer"></span>
@@ -139,6 +156,26 @@
 </footer>
 
 <script>
+if(!window.isSecureContext){
+  const w=document.createElement('div');
+  w.style.cssText='background:#FF4F00;color:#1B1714;padding:14px;font:14px/1.4 monospace;text-align:center';
+  w.textContent='This page needs HTTPS (or localhost) to encrypt files. Put the relay behind a reverse proxy with TLS, or access it locally.';
+  document.body.prepend(w);
+}
+(async()=>{
+  const el=document.getElementById('gh-stars');
+  if(!el)return;
+  const cached=JSON.parse(localStorage.getItem('gh-stars')||'null');
+  const now=Date.now();
+  if(cached&&now-cached.t<3600000){el.textContent='★ '+cached.n;return}
+  try{
+    const r=await fetch('https://api.github.com/repos/Sanyam-G/Airpipe');
+    if(!r.ok)return;
+    const d=await r.json();
+    el.textContent='★ '+d.stargazers_count;
+    localStorage.setItem('gh-stars',JSON.stringify({t:now,n:d.stargazers_count}));
+  }catch(_){}
+})();
 function $(id){return document.getElementById(id)}
 function normalize(p){return p.toUpperCase().trim().replace(/\s+/g,' ')}
 async function sha256(s){

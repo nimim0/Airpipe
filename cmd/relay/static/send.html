@@ -84,6 +84,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="/static/words.js"></script>
 <script>
+if(!window.isSecureContext){
+  const w=document.createElement('div');
+  w.style.cssText='background:#FF4F00;color:#1B1714;padding:14px;font:14px/1.4 monospace;text-align:center';
+  w.textContent='This page needs HTTPS (or localhost) to encrypt files. Put the relay behind a reverse proxy with TLS, or access it locally.';
+  document.body.prepend(w);
+}
 const dropzone=document.getElementById('dropzone');
 const fileinput=document.getElementById('fileinput');
 
